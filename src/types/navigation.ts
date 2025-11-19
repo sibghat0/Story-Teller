@@ -8,6 +8,8 @@ export type AuthStackParamList = {
 export type AppTabParamList = {
   Home: undefined;
   Profile: undefined;
+  List: undefined;
+  Event: undefined;
 };
 
 // ROOT NAVIGATOR

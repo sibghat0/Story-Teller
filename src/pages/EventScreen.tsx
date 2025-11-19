@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function Home() {
+export default function EventScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Home</Text>
+      <Text style={styles.title}>Event</Text>
       <Text>Welcome to the app. You are logged in.</Text>
     </View>
   );

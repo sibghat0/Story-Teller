@@ -1,43 +1,48 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import authService from '../services/authService';
-import { CompositeNavigationProp } from '@react-navigation/native';
-import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { AppTabParamList, RootStackParamList } from '../types/navigation';
 
-type ProfileNavProp = CompositeNavigationProp<
-  BottomTabNavigationProp<AppTabParamList, 'Profile'>,
-  StackNavigationProp<RootStackParamList>
->;
-
-type Props = {
-  navigation: ProfileNavProp;
-};
-
-export default function ProfileScreen({ navigation }: Props) {
+export default function ProfileScreen() {
   const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
   const handleLogout = async () => {
     await authService.logout();
-    navigation.replace('AuthStack');
   };
 
-  const handleShowProfile = async () => {
-    const prof = await authService.getProfile();
-    setProfile(prof);
+  const loadProfile = async () => {
+    const res = await authService.getProfile();
+    if (res.ok) {
+      setProfile(res.user);
+    }
+    setLoading(false);
   };
 
   useEffect(() => {
-    handleShowProfile();
+    loadProfile();
   }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Profile</Text>
 
-      {authService.user && (
+      {profile && (
         <Text style={styles.userInfo}>
-          {profile.user.name} | {profile.user.email}
+          {profile.name} | {profile.email}
         </Text>
       )}
 

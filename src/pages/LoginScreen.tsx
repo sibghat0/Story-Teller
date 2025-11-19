@@ -40,7 +40,7 @@ export default function LoginScreen({ navigation }: Props) {
     setLoading(false);
 
     if (res.ok) {
-      navigation.replace('MainApp');
+      // navigation.replace('MainApp');
     } else {
       Alert.alert('Signup Error', res.error);
     }
