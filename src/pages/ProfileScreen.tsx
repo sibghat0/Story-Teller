@@ -6,27 +6,35 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import authService from '../services/authService';
+import { useAuth } from '../store/useAuth';
 
 export default function ProfileScreen() {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  const handleLogout = async () => {
-    await authService.logout();
-  };
+  const { logout, getProfile } = useAuth();
 
-  const loadProfile = async () => {
-    const res = await authService.getProfile();
-    if (res.ok) {
-      setProfile(res.user);
-    }
-    setLoading(false);
+  const handleLogout = async () => {
+    await logout();
   };
 
   useEffect(() => {
-    loadProfile();
-  }, []);
+    let mounted = true;
+    const fetchProfile = async () => {
+      const res = await getProfile();
+      if (!mounted) return;
+      if (res.ok) {
+        setProfile(res.user);
+      }
+      setLoading(false);
+    };
+
+    fetchProfile();
+
+    return () => {
+      mounted = false;
+    };
+  }, [getProfile]);
 
   if (loading) {
     return (
@@ -39,7 +47,6 @@ export default function ProfileScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Profile</Text>
-
       {profile && (
         <Text style={styles.userInfo}>
           {profile.name} | {profile.email}

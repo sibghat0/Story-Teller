@@ -8,7 +8,6 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import authService from '../services/authService';
 import { StackNavigationProp } from '@react-navigation/stack';
 import {
   AppTabParamList,
@@ -16,6 +15,7 @@ import {
   RootStackParamList,
 } from '../types/navigation';
 import { CompositeNavigationProp } from '@react-navigation/native';
+import { useAuth } from '../store/useAuth';
 
 type LoginScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<AuthStackParamList, 'Login'>,
@@ -33,16 +33,15 @@ export default function LoginScreen({ navigation }: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
   const handleLogin = async () => {
     setLoading(true);
-    const res = await authService.login(email, password);
+    const ok = await login(email, password);
     setLoading(false);
 
-    if (res.ok) {
-      // navigation.replace('MainApp');
-    } else {
-      Alert.alert('Signup Error', res.error);
+    if (!ok) {
+      Alert.alert('Login failed');
     }
   };
 
@@ -55,6 +54,7 @@ export default function LoginScreen({ navigation }: Props) {
         value={email}
         onChangeText={setEmail}
         style={styles.input}
+        placeholderTextColor="#fff"
       />
 
       <TextInput
@@ -63,6 +63,7 @@ export default function LoginScreen({ navigation }: Props) {
         value={password}
         onChangeText={setPassword}
         style={styles.input}
+        placeholderTextColor="#fff"
       />
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>

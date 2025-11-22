@@ -8,7 +8,6 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import authService from '../services/authService';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import {
@@ -16,6 +15,7 @@ import {
   AuthStackParamList,
   RootStackParamList,
 } from '../types/navigation';
+import { useAuth } from '../store/useAuth';
 
 type SignupNavigationProp = CompositeNavigationProp<
   StackNavigationProp<AuthStackParamList, 'Signup'>,
@@ -35,15 +35,15 @@ export default function SignupScreen({ navigation }: Props) {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const { signup } = useAuth();
+
   const handleSignup = async () => {
     setLoading(true);
-    const res = await authService.signup(name, email, password);
+    const ok = await signup(name, email, password);
     setLoading(false);
 
-    if (res.ok) {
-      navigation.replace('MainApp');
-    } else {
-      Alert.alert('Signup Error', res.error);
+    if (!ok) {
+      Alert.alert('Signup failed');
     }
   };
 
@@ -55,12 +55,14 @@ export default function SignupScreen({ navigation }: Props) {
         value={name}
         onChangeText={setName}
         placeholder="Name"
+        placeholderTextColor="#fff"
         style={styles.input}
       />
       <TextInput
         value={email}
         onChangeText={setEmail}
         placeholder="Email"
+        placeholderTextColor="#fff"
         style={styles.input}
       />
       <TextInput
@@ -68,6 +70,7 @@ export default function SignupScreen({ navigation }: Props) {
         value={password}
         onChangeText={setPassword}
         placeholder="Password"
+        placeholderTextColor="#fff"
         style={styles.input}
       />
 
@@ -93,7 +96,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#000',
   },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, color: '#fff' },
   input: {
     borderWidth: 1,
     padding: 12,
