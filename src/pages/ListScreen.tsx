@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import ListView from '../components/ListView/ListView';
 
 export default function ListScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>List</Text>
-      <Text>Welcome to the app. You are logged in.</Text>
+      <ListView />
     </View>
   );
 }
@@ -18,5 +18,4 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
   },
-  title: { fontSize: 20, fontWeight: '700', marginBottom: 8 },
 });
