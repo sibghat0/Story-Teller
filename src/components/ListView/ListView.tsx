@@ -129,7 +129,7 @@ const ListView = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, paddingHorizontal: 16 }}>
         <Text style={styles.header}>List View</Text>
         <FlatList
           data={ListArray}
@@ -151,9 +151,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingTop: 16,
     paddingBottom: 16,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 12,
+    backgroundColor: '#fff',
   },
   header: {
     fontSize: 28,
@@ -170,11 +168,18 @@ const styles = StyleSheet.create({
     padding: 16,
     width: '100%',
     borderWidth: 1.5,
+
+    // --- SHADOW FIX ---
+    // On iOS, shadowOpacity works fine with transparency.
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
-    elevation: 5,
+
+    // On Android, elevation creates a shadow BEHIND the view.
+    // Since the view is transparent, you see the shadow through it (muddy look).
+    // Setting elevation to 0 fixes the color issue.
+    elevation: 0,
   },
   title: {
     fontSize: 18,
