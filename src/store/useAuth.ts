@@ -81,7 +81,7 @@ export const useAuth = create<AuthState>(set => ({
       set({ user });
       return { ok: true, user };
     } catch {
-      return null;
+      return { ok: false, user: null };
     }
   },
 }));

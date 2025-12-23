@@ -25,6 +25,8 @@ export default function ProfileScreen() {
       if (!mounted) return;
       if (res.ok) {
         setProfile(res.user);
+      } else {
+        setProfile(null);
       }
       setLoading(false);
     };
